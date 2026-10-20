@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Ay Byay</string>
+    <string name="title_activity_main">Ay Byay</string>
+    <string name="package_name">com.aybyay.tracker</string>
+    <string name="custom_url_scheme">com.aybyay.tracker</string>
+    <string name="server_client_id">781029795063-4dhiu7qgo1phrkmbsu7lfniqgcrgnabg.apps.googleusercontent.com</string>
+</resources>

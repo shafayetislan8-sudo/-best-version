@@ -1,0 +1,36 @@
+
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1e40af" />
+      <stop offset="50%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+    <linearGradient id="boltGrad" x1="200" y1="80" x2="312" y2="432" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#eab308" />
+      <stop offset="100%" stop-color="#ca8a04" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#0f172a" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Background rounded squircle -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)"/>
+
+  <!-- Inner border ring -->
+  <rect x="24" y="24" width="464" height="464" rx="88" stroke="#ffffff" stroke-opacity="0.15" stroke-width="8"/>
+
+  <!-- Central stylized lightning bolt matching app branding -->
+  <path d="M280 64L160 272H272L240 448L368 224H256L280 64Z" 
+        fill="url(#boltGrad)" 
+        filter="url(#shadow)"
+        stroke="#ffffff"
+        stroke-width="8"
+        stroke-linejoin="round"/>
+
+  <!-- Subtle Taka / Currency dot accent -->
+  <circle cx="360" cy="140" r="18" fill="#ffffff" fill-opacity="0.9"/>
+  <circle cx="160" cy="380" r="14" fill="#ffffff" fill-opacity="0.6"/>
+</svg>

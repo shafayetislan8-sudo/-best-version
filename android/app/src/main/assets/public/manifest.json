@@ -1,0 +1,32 @@
+{
+  "id": "/",
+  "name": "আয় ব্যয় - বাংলা আয় ও ব্যয় ট্র্যাকার",
+  "short_name": "আয় ব্যয়",
+  "description": "একটি আধুনিক, সহজ ও পূর্ণাঙ্গ বাংলা আয়-ব্যয় ও ক্যাশ বুক ট্র্যাকার। বাজেট, দেনা-পাওনা ও ক্লাউড ব্যাকআপ।",
+  "theme_color": "#2563eb",
+  "background_color": "#fafbff",
+  "display": "standalone",
+  "orientation": "portrait",
+  "start_url": "/",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/maskable-icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
