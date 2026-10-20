@@ -17,24 +17,34 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
       - name: Set up Java JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v3
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Accept Android SDK Licenses
+        run: |
+          yes | sdkmanager --licenses 2>/dev/null || true
 
       - name: Install Dependencies
         run: |
           npm install --legacy-peer-deps
-          npm install -g @capacitor/cli
+
+      - name: Patch legacy plugin compatibility
+        run: |
+          # Replace deprecated jcenter with mavenCentral in all node_modules gradle files
+          find node_modules/ -name "build.gradle" -exec sed -i 's/jcenter()/mavenCentral()/g' {} + 2>/dev/null || true
+          # Fix legacy dynamic version in capacitor-google-auth plugin
+          find node_modules/@codetrix-studio -name "build.gradle" -exec sed -i 's/18\.\+/20.7.0/g' {} + 2>/dev/null || true
+          # Fix old pre-AndroidX test runner
+          find node_modules/@codetrix-studio -name "build.gradle" -exec sed -i 's/android\.support\.test\.runner\.AndroidJUnitRunner/androidx.test.runner.AndroidJUnitRunner/g' {} + 2>/dev/null || true
 
       - name: Build Web Application
         run: npm run build
@@ -48,10 +58,19 @@ jobs:
           fi
           npx cap sync android
 
+      - name: Ensure Android Build Configuration
+        run: |
+          # Guarantee nonTransitiveRClass and Jetifier in gradle.properties
+          grep -q "android.nonTransitiveRClass" android/gradle.properties || echo "android.nonTransitiveRClass=false" >> android/gradle.properties
+          grep -q "android.enableJetifier" android/gradle.properties || echo "android.enableJetifier=true" >> android/gradle.properties
+          # Fix gradlew line endings if committed from Windows
+          sed -i 's/\r$//' android/gradlew
+          chmod +x android/gradlew
+
       - name: Build Android Debug APK
         run: |
           cd android
-          chmod +x gradlew
+          export GRADLE_OPTS="-Xmx2048m -Dorg.gradle.jvmargs='-Xmx2048m -XX:MaxMetaspaceSize=512m'"
           ./gradlew assembleDebug --no-daemon --stacktrace
           cd ..
           APK_FILE=$(find android/app/build/outputs/apk/ -name "*.apk" | head -n 1)
@@ -72,7 +91,7 @@ jobs:
           if-no-files-found: error
 
       - name: Create GitHub Release with APK
-        if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
+        if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v1.0.${{ github.run_number }}
